@@ -46,8 +46,8 @@ void uart_init_uart()
 	USART2->CR1 |=
 			BIT13 | // USART Enable
 			BIT5 | // RXNE interrupt enable
-			BIT3 // Transmitter enable TODO: avoid transmitting
-			//BIT2 // Receiver enable
+			BIT3 | // Transmitter enable TODO: avoid transmitting
+			BIT2 // Receiver enable
 			;
 
 	// set baud rate
@@ -55,7 +55,11 @@ void uart_init_uart()
 }
 
 int uart_get_received_byte(char* buffer) {
-	return 0;
+	if (head != tail) {
+		(*buffer) = circular_buffer[tail];
+		tail = (tail + 1) % CIRCULAR_BUFFER_SIZE;
+	}
+
 }
 
 void uart_transmit_echo() {

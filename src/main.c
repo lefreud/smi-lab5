@@ -49,8 +49,13 @@ int main(void)
 	uart_init_uart();
 
 	while (1) {
+		/* // USART2->CR1 |= BIT13; // USART Enable
+		volatile int a = USART2->SR;
 		while (!(USART2->SR & BIT7));
+		a = USART2->SR;
 		USART2->DR = 0xAA;
-		// uart_transmit_echo();
+		volatile int b = USART2->DR;
+		// USART2->CR1 &= ~BIT13; // USART Disable*/
+		uart_transmit_echo();
 	}
 }
