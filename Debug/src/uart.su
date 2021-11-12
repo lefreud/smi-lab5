@@ -1,0 +1,4 @@
+uart.c:22:6:USART2_IRQHandler	4	static
+uart.c:34:6:uart_init_uart	4	static
+uart.c:57:5:uart_get_received_byte	16	static
+uart.c:61:6:uart_transmit_echo	4	static
