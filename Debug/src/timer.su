@@ -1,0 +1,2 @@
+timer.c:9:6:timer2_init	16	static
+timer.c:18:6:TIM2_IRQHandler	4	static

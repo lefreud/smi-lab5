@@ -1,0 +1,6 @@
+utils.c:5:6:delay_cycles	24	static
+utils.c:10:6:set_gpio_mode	32	static
+utils.c:36:6:set_gpio_output_type	32	static
+utils.c:62:6:set_gpio_pupdr_mode	32	static
+utils.c:88:6:set_gpio_output	32	static
+utils.c:114:5:get_gpio_input	24	static

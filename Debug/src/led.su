@@ -1,0 +1,3 @@
+led.c:5:6:configureLEDs	4	static
+led.c:17:6:turnOnTheLed	4	static
+led.c:21:6:turnOffTheLed	4	static

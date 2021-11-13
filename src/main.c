@@ -31,6 +31,12 @@ SOFTWARE.
 #include "stm32f4xx.h"
 #include "uart.h"
 #include "macro_utiles.h"
+#include "lcd.h"
+#include "utils.h"
+#include "string.h"
+#include "pins.h"
+#include "timer.h"
+#include "led.h"
 
 /* Private macro */
 /* Private variables */
@@ -44,9 +50,17 @@ SOFTWARE.
 **
 **===========================================================================
 */
+
+static volatile uint32_t lastTimeRead = -1;
+
 int main(void)
 {
 	uart_init_uart();
+	lcd_init();
+    lcd_write_first_row();
+    goToSecondLine();
+    configureLEDs();
+    timer2_init();
 
 	while (1) {
 		/* // USART2->CR1 |= BIT13; // USART Enable
@@ -57,5 +71,10 @@ int main(void)
 		volatile int b = USART2->DR;
 		// USART2->CR1 &= ~BIT13; // USART Disable*/
 		uart_transmit_echo();
+
+		if(lastTimeRead != second){
+			lastTimeRead = second;
+			lcd_write_time(lastTimeRead);
+		}
 	}
 }

@@ -35,13 +35,15 @@ void uart_init_uart()
 {
 
 	NVIC->ISER[1] |= BIT6; // Enable USART2 global interrupt
-	RCC->APB1ENR |= BIT17 // Enable USART2 clock
-			;
+	RCC->APB1ENR |= BIT17; // Enable USART2 clock
+
 	RCC->AHB1ENR |= BIT0; // GPIOA clock
 
 	// set gpio mode, etc.
 	GPIOA->MODER |= BIT5 | BIT7; // Alternate function for PA2 and PA3
 	GPIOA->AFR[0] |= (0b0111 << 8) | (0b0111 << 12); // Alternate function 7: USART1-3
+
+	USART2->CR1 &= ~BIT12; // 8 data bits
 
 	USART2->CR1 |=
 			BIT13 | // USART Enable
@@ -49,6 +51,8 @@ void uart_init_uart()
 			BIT3 | // Transmitter enable TODO: avoid transmitting
 			BIT2 // Receiver enable
 			;
+
+	USART2->CR2 &= ~(BIT12 | BIT13); // 1 stop bit
 
 	// set baud rate
 	USART2->BRR = (BAUD_RATE_MANTISSA << 4) | (BAUD_RATE_FRACTION & 0b1111);
