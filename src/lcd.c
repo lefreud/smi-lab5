@@ -26,7 +26,7 @@ static char* INSTRUCTION;
 void LCD_pre_Send_Command(){
 	set_gpio_output(LCD_PORT, LCD_RS, 0); //Command Mode
 	set_gpio_output(LCD_PORT, LCD_RW, 0); //R/W to 0
-	delay_cycles(15000);
+	delay_cycles(12000);
 	set_gpio_output(LCD_PORT, LCD_EN, 1); //Set Enable to 1
 }
 
@@ -37,7 +37,7 @@ void LCD_post_Send(){
 void LCD_pre_Write_Command(){
 	set_gpio_output(LCD_PORT, LCD_RS, 1); //Data Mode
 	set_gpio_output(LCD_PORT, LCD_RW, 0); //R/W to 0
-	delay_cycles(15000);
+	delay_cycles(12000);
 	set_gpio_output(LCD_PORT, LCD_EN, 1); //Set Enable
 }
 
@@ -261,4 +261,11 @@ void lcd_write_time(int currentTime){
 	// Char array truncate by null
 	arr[i] = '\0';
 	lcd_write_characters((char*)arr);
+}
+
+void lcd_write_blank_space(){
+	LCD_pre_Write_Command();
+	INSTRUCTION = "00100000"; // Blank Space
+	LCD_write_Instruction(INSTRUCTION);
+	LCD_post_Send();
 }

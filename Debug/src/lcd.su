@@ -8,3 +8,4 @@ lcd.c:159:6:goToSecondLine	8	static
 lcd.c:167:6:goToFirstLine	8	static
 lcd.c:175:6:lcd_write_characters	24	static
 lcd.c:228:6:lcd_write_time	72	dynamic
+lcd.c:266:6:lcd_write_blank_space	8	static

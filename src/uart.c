@@ -12,6 +12,8 @@
 #define BAUD_RATE_FRACTION 1 // TODO: validate this
 
 static uint8_t circular_buffer[CIRCULAR_BUFFER_SIZE];
+char* receivedBytes[3];
+
 static int head = 0;
 static int tail = 0;
 
@@ -62,8 +64,9 @@ int uart_get_received_byte(char* buffer) {
 	if (head != tail) {
 		(*buffer) = circular_buffer[tail];
 		tail = (tail + 1) % CIRCULAR_BUFFER_SIZE;
+		return 1;
 	}
-
+	return 0;
 }
 
 void uart_transmit_echo() {
@@ -74,3 +77,6 @@ void uart_transmit_echo() {
 	}
 }
 
+char* last_three_received_bytes(){
+	return receivedBytes;
+}

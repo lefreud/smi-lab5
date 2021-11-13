@@ -52,6 +52,7 @@ SOFTWARE.
 */
 
 static volatile uint32_t lastTimeRead = -1;
+static volatile uint32_t lastTransmissionNumber = 0;
 
 int main(void)
 {
@@ -75,6 +76,24 @@ int main(void)
 		if(lastTimeRead != second){
 			lastTimeRead = second;
 			lcd_write_time(lastTimeRead);
+		}
+
+		char* receivedBytes = last_three_received_bytes();
+		if((receivedBytes[0] + receivedBytes[1] + receivedBytes[2]) % 256 == 0){
+			if(receivedBytes[0] == 0x41){
+			   if(receivedBytes[1] == 0x30) {
+				   turnOffTheLed();
+			   } else if (receivedBytes[1] == 0x31) {
+				   turnOnTheLed();
+			   }
+			} else if (receivedBytes[0] == 0x42){
+				goToSecondLine();
+				for(int i = 0; i < 16; i++){
+					lcd_write_blank_space();
+				}
+			} else if(receivedBytes[0] == 0x43) {
+
+			}
 		}
 	}
 }

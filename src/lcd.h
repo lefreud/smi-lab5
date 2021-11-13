@@ -23,5 +23,6 @@ void LCD_write_Instruction(char* instruction);
 void lcd_write_time(int currentTime);
 void goToFirstLine();
 void goToSecondLine();
+void lcd_write_blank_space();
 
 #endif /* LCD_H_ */
