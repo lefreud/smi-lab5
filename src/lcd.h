@@ -24,5 +24,6 @@ void lcd_write_time(int currentTime);
 void goToFirstLine();
 void goToSecondLine();
 void lcd_write_blank_space();
+char* charToBinary(char c);
 
 #endif /* LCD_H_ */

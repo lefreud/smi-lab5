@@ -12,10 +12,12 @@
 #define BAUD_RATE_FRACTION 1 // TODO: validate this
 
 static uint8_t circular_buffer[CIRCULAR_BUFFER_SIZE];
-char* receivedBytes[3];
+char receivedBytes[3];
+receptionComplete = 0;
 
 static int head = 0;
 static int tail = 0;
+static int bytesReceived = 0;
 
 /*
  * INTERRUPT HANDLER
@@ -60,13 +62,19 @@ void uart_init_uart()
 	USART2->BRR = (BAUD_RATE_MANTISSA << 4) | (BAUD_RATE_FRACTION & 0b1111);
 }
 
-int uart_get_received_byte(char* buffer) {
+void uart_get_received_byte(char* buffer) {
 	if (head != tail) {
+		bytesReceived++;
+		if(bytesReceived == 3){
+			// TODO: Write in receivedBytes what is the last_three_received_bytes
+			receptionComplete = 1;
+			bytesReceived = 0;
+		} else {
+			receptionComplete = 0;
+		}
 		(*buffer) = circular_buffer[tail];
 		tail = (tail + 1) % CIRCULAR_BUFFER_SIZE;
-		return 1;
 	}
-	return 0;
 }
 
 void uart_transmit_echo() {

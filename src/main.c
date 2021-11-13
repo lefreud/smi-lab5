@@ -37,19 +37,7 @@ SOFTWARE.
 #include "pins.h"
 #include "timer.h"
 #include "led.h"
-
-/* Private macro */
-/* Private variables */
-/* Private function prototypes */
-/* Private functions */
-
-/**
-**===========================================================================
-**
-**  Abstract: main program
-**
-**===========================================================================
-*/
+#include "commandParser.h"
 
 static volatile uint32_t lastTimeRead = -1;
 static volatile uint32_t lastTransmissionNumber = 0;
@@ -62,6 +50,11 @@ int main(void)
     goToSecondLine();
     configureLEDs();
     timer2_init();
+
+	receivedBytes[0] = 'C';
+	receivedBytes[1] = '0';
+	receivedBytes[2] = 0x8d;
+	receptionComplete = 1;
 
 	while (1) {
 		/* // USART2->CR1 |= BIT13; // USART Enable
@@ -78,22 +71,8 @@ int main(void)
 			lcd_write_time(lastTimeRead);
 		}
 
-		char* receivedBytes = last_three_received_bytes();
-		if((receivedBytes[0] + receivedBytes[1] + receivedBytes[2]) % 256 == 0){
-			if(receivedBytes[0] == 0x41){
-			   if(receivedBytes[1] == 0x30) {
-				   turnOffTheLed();
-			   } else if (receivedBytes[1] == 0x31) {
-				   turnOnTheLed();
-			   }
-			} else if (receivedBytes[0] == 0x42){
-				goToSecondLine();
-				for(int i = 0; i < 16; i++){
-					lcd_write_blank_space();
-				}
-			} else if(receivedBytes[0] == 0x43) {
-
-			}
+		if(receptionComplete == 1){
+			parseCommand(receivedBytes);
 		}
 	}
 }

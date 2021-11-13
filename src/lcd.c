@@ -4,6 +4,7 @@
 #include "stm32f4xx.h"
 #include "macro_utiles.h"
 #include "string.h"
+#include <stdlib.h>
 
 
 static char* INSTRUCTION;
@@ -22,6 +23,21 @@ static char* INSTRUCTION;
 #define NUMBER9				"00111001"
 
 /* Private functions */
+
+char* charToBinary(char c){
+	char* binaryForm;
+	binaryForm = (char*)malloc(8);
+	int i;
+	for (i = 0; i < 8; ++i) {
+		if ((c & (1 << i)) == 0) {
+			binaryForm[7 - i] = '0';
+		} else {
+			binaryForm[7 - i] = '1';
+		}
+	}
+	binaryForm[i] = '\0';
+	return (char*)binaryForm;
+}
 
 void LCD_pre_Send_Command(){
 	set_gpio_output(LCD_PORT, LCD_RS, 0); //Command Mode
@@ -126,33 +142,27 @@ void lcd_init(){
 
 void lcd_write_first_row(){
 	LCD_pre_Write_Command();
-	INSTRUCTION = "01000110"; //Letter F
-	LCD_write_Instruction(INSTRUCTION);
+	LCD_write_Instruction(charToBinary('F'));
 	LCD_post_Send();
 
 	LCD_pre_Write_Command();
-	INSTRUCTION = "01000110"; //Letter F
-	LCD_write_Instruction(INSTRUCTION);
+	LCD_write_Instruction(charToBinary('F'));
 	LCD_post_Send();
 
 	LCD_pre_Write_Command();
-	INSTRUCTION = "01000011"; //Letter C
-	LCD_write_Instruction(INSTRUCTION);
+	LCD_write_Instruction(charToBinary('C'));
 	LCD_post_Send();
 
 	LCD_pre_Write_Command();
-	INSTRUCTION = "01001010"; //Letter J
-	LCD_write_Instruction(INSTRUCTION);
+	LCD_write_Instruction(charToBinary('J'));
 	LCD_post_Send();
 
 	LCD_pre_Write_Command();
-	INSTRUCTION = "01001000"; //Letter H
-	LCD_write_Instruction(INSTRUCTION);
+	LCD_write_Instruction(charToBinary('H'));
 	LCD_post_Send();
 
 	LCD_pre_Write_Command();
-	INSTRUCTION = "01011111"; //Char _
-	LCD_write_Instruction(INSTRUCTION);
+	LCD_write_Instruction(charToBinary('_'));
 	LCD_post_Send();
 }
 
@@ -174,54 +184,9 @@ void goToFirstLine(){
 
 void lcd_write_characters(char* characters){
 	for (int i = 0; i < strlen(characters); i++) {
-		switch (characters[i]) {
-			case '0':
-				INSTRUCTION = NUMBER0; //Number 0
-				break;
-			case '1':
-				INSTRUCTION = NUMBER1; //Number 1
-				break;
-			case '2':
-				INSTRUCTION = NUMBER2; //Number 2
-				break;
-			case '3':
-				INSTRUCTION = NUMBER3; //Number 3
-				break;
-			case '4':
-				INSTRUCTION = NUMBER4; //Number 4
-				break;
-			case '5':
-				INSTRUCTION = NUMBER5; //Number 5
-				break;
-			case '6':
-				INSTRUCTION = NUMBER6; //Number 6
-				break;
-			case '7':
-				INSTRUCTION = NUMBER7; //Number 7
-				break;
-			case '8':
-				INSTRUCTION = NUMBER8; //Number 8
-				break;
-			case '9':
-				INSTRUCTION = NUMBER9; //Number 9
-				break;
-			case '#':
-				LCD_pre_Send_Command();
-				INSTRUCTION = "00000001"; //Clear Display
-				LCD_write_Instruction(INSTRUCTION);
-				LCD_post_Send();
-				lcd_write_first_row();
-				break;
-			default:
-				break;
-			}
-
-			// write digits, not #
-			if(strchr("0123456789", characters[i]) != NULL){
-				LCD_pre_Write_Command();
-				LCD_write_Instruction(INSTRUCTION);
-				LCD_post_Send();
-			}
+		LCD_pre_Write_Command();
+		LCD_write_Instruction(charToBinary(characters[i]));
+		LCD_post_Send();
 	}
 }
 
@@ -265,7 +230,7 @@ void lcd_write_time(int currentTime){
 
 void lcd_write_blank_space(){
 	LCD_pre_Write_Command();
-	INSTRUCTION = "00100000"; // Blank Space
-	LCD_write_Instruction(INSTRUCTION);
+	LCD_write_Instruction(charToBinary(' '));
 	LCD_post_Send();
 }
+
