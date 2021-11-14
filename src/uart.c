@@ -8,12 +8,10 @@
 #define USART_FLAG_RXNE BIT5 // receive buffer not empty
 
 // baud rate
-#define BAUD_RATE_MANTISSA 175
-#define BAUD_RATE_FRACTION 1 // TODO: validate this
+#define BAUD_RATE_MANTISSA 43
+#define BAUD_RATE_FRACTION 12 // TODO: validate this
 
 static uint8_t circular_buffer[CIRCULAR_BUFFER_SIZE];
-char receivedBytes[3];
-receptionComplete = 0;
 
 static int head = 0;
 static int tail = 0;
@@ -62,18 +60,13 @@ void uart_init_uart()
 	USART2->BRR = (BAUD_RATE_MANTISSA << 4) | (BAUD_RATE_FRACTION & 0b1111);
 }
 
-void uart_get_received_byte(char* buffer) {
+int uart_get_received_byte(char* buffer) {
 	if (head != tail) {
-		bytesReceived++;
-		if(bytesReceived == 3){
-			// TODO: Write in receivedBytes what is the last_three_received_bytes
-			receptionComplete = 1;
-			bytesReceived = 0;
-		} else {
-			receptionComplete = 0;
-		}
 		(*buffer) = circular_buffer[tail];
 		tail = (tail + 1) % CIRCULAR_BUFFER_SIZE;
+		return 1;
+	} else {
+		return 0;
 	}
 }
 
@@ -83,8 +76,4 @@ void uart_transmit_echo() {
 		USART2->DR = circular_buffer[tail];
 		tail = (tail + 1) % CIRCULAR_BUFFER_SIZE;
 	}
-}
-
-char* last_three_received_bytes(){
-	return receivedBytes;
 }

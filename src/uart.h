@@ -5,11 +5,7 @@
 void USART2_IRQHandler();
 
 void uart_init_uart();
-void uart_get_received_byte(char* buffer);
+int uart_get_received_byte(char* buffer);
 void uart_transmit_echo();
-char* last_three_received_bytes();
-
-extern int receptionComplete;
-extern char receivedBytes[3];
 
 #endif /* UART_H_ */

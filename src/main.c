@@ -44,19 +44,23 @@ static volatile uint32_t lastTransmissionNumber = 0;
 
 int main(void)
 {
+    command_parser_init();
 	uart_init_uart();
 	lcd_init();
     lcd_write_first_row();
     goToSecondLine();
     configureLEDs();
     timer2_init();
-
+    /*
 	receivedBytes[0] = 'C';
 	receivedBytes[1] = '0';
-	receivedBytes[2] = 0x8d;
-	receptionComplete = 1;
+	receivedBytes[2] = 0x8d;*/
+    char latest_byte;
 
 	while (1) {
+		/*for (volatile int i = 0; i < 100000; i++);
+		while (!(USART2->SR & BIT7));
+		USART2->DR = 0xAA;*/
 		/* // USART2->CR1 |= BIT13; // USART Enable
 		volatile int a = USART2->SR;
 		while (!(USART2->SR & BIT7));
@@ -64,15 +68,14 @@ int main(void)
 		USART2->DR = 0xAA;
 		volatile int b = USART2->DR;
 		// USART2->CR1 &= ~BIT13; // USART Disable*/
-		uart_transmit_echo();
+
+		if (uart_get_received_byte(&latest_byte)) {
+			consume_byte(latest_byte);
+		}
 
 		if(lastTimeRead != second){
 			lastTimeRead = second;
 			lcd_write_time(lastTimeRead);
-		}
-
-		if(receptionComplete == 1){
-			parseCommand(receivedBytes);
 		}
 	}
 }
