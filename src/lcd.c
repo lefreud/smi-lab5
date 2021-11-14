@@ -9,21 +9,6 @@
 
 static char* INSTRUCTION;
 
-
-//Numbers of the Keypad
-#define NUMBER0				"00110000"
-#define NUMBER1				"00110001"
-#define NUMBER2				"00110010"
-#define NUMBER3				"00110011"
-#define NUMBER4				"00110100"
-#define NUMBER5				"00110101"
-#define NUMBER6				"00110110"
-#define NUMBER7				"00110111"
-#define NUMBER8				"00111000"
-#define NUMBER9				"00111001"
-
-/* Private functions */
-
 char* charToBinary(char c){
 	char* binaryForm;
 	binaryForm = (char*)malloc(8);
@@ -141,29 +126,17 @@ void lcd_init(){
 }
 
 void lcd_write_first_row(){
-	LCD_pre_Write_Command();
-	LCD_write_Instruction(charToBinary('F'));
-	LCD_post_Send();
-
-	LCD_pre_Write_Command();
-	LCD_write_Instruction(charToBinary('F'));
-	LCD_post_Send();
-
-	LCD_pre_Write_Command();
-	LCD_write_Instruction(charToBinary('C'));
-	LCD_post_Send();
-
-	LCD_pre_Write_Command();
-	LCD_write_Instruction(charToBinary('J'));
-	LCD_post_Send();
-
-	LCD_pre_Write_Command();
-	LCD_write_Instruction(charToBinary('H'));
-	LCD_post_Send();
-
-	LCD_pre_Write_Command();
-	LCD_write_Instruction(charToBinary('_'));
-	LCD_post_Send();
+	char* firstRow;
+	firstRow = (char*)malloc(6);
+	firstRow[0] = 'F';
+	firstRow[1] = 'F';
+	firstRow[2] = 'C';
+	firstRow[3] = 'J';
+	firstRow[4] = 'H';
+	firstRow[5] = '_';
+	firstRow[6] = '\0';
+	lcd_write_characters(firstRow);
+	free(firstRow);
 }
 
 void goToSecondLine(){
@@ -184,9 +157,11 @@ void goToFirstLine(){
 
 void lcd_write_characters(char* characters){
 	for (int i = 0; i < strlen(characters); i++) {
+		char* binaryForm = charToBinary(characters[i]);
 		LCD_pre_Write_Command();
-		LCD_write_Instruction(charToBinary(characters[i]));
+		LCD_write_Instruction(binaryForm);
 		LCD_post_Send();
+		free(binaryForm);
 	}
 }
 
@@ -226,11 +201,14 @@ void lcd_write_time(int currentTime){
 	// Char array truncate by null
 	arr[i] = '\0';
 	lcd_write_characters((char*)arr);
+	free(arr);
 }
 
 void lcd_write_blank_space(){
+	char* binaryForm = charToBinary(' ');
 	LCD_pre_Write_Command();
-	LCD_write_Instruction(charToBinary(' '));
+	LCD_write_Instruction(binaryForm);
 	LCD_post_Send();
+	free(binaryForm);
 }
 

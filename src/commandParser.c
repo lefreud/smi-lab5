@@ -2,6 +2,7 @@
 #include "stm32f4xx.h"
 #include "commandParser.h"
 #include "lcd.h"
+#include "led.h"
 
 #define COMMAND_BUFFER_SIZE 3
 #define LCD_LINE_SIZE 16
@@ -17,7 +18,7 @@ void command_parser_init() {
 		command_buffer[i] = 0;
 	}
 	for (int i = 0; i < LCD_LINE_SIZE; i++) {
-		allReceivedBytes[i] = 0;
+		allReceivedBytes[i] = ' ';
 	}
 }
 
@@ -41,7 +42,8 @@ void consume_byte(char received_byte) {
 				goToSecondLine();
 				for(int i = 0; i < LCD_LINE_SIZE; i++){
 					lcd_write_blank_space();
-					allReceivedBytes[i] = 0;
+					allReceivedBytes[i] = ' ';
+					bytesToShow = 0;
 				}
 			} else if(command == 0x43) {
 				allReceivedBytes[bytesToShow] = parameter;
@@ -54,36 +56,3 @@ void consume_byte(char received_byte) {
 
 	current_byte_index = (current_byte_index + 1) % COMMAND_BUFFER_SIZE;
 }
-/*
-void parseCommand(char* receivedBytes){
-	static int value;
-	char command = *receivedBytes;
-	receivedBytes++;
-	char parameter = *receivedBytes;
-	receivedBytes++;
-	char checksum = *receivedBytes;
-	value = (int)command + (int)parameter + (int)checksum;
-	if(value % 256 == 0){
-		if(command == 0x41){
-		   if(parameter == 0x30) {
-			   turnOffTheLed();
-		   } else if (parameter == 0x31) {
-			   turnOnTheLed();
-		   }
-		} else if (command == 0x42){
-			goToSecondLine();
-			for(int i = 0; i < 16; i++){
-				lcd_write_blank_space();
-			}
-		} else if(command == 0x43) {
-			allReceivedBytes[bytesToShow] = parameter;
-			bytesToShow++;
-			if(16 <= bytesToShow){
-				bytesToShow = 0;
-			}
-			goToSecondLine();
-			lcd_write_characters(allReceivedBytes);
-		}
-	}
-}
-*/

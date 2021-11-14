@@ -1,2 +1,2 @@
-commandParser.c:14:6:command_parser_init	16	static
-commandParser.c:24:6:consume_byte	24	static
+commandParser.c:15:6:command_parser_init	16	static
+commandParser.c:25:6:consume_byte	24	static
