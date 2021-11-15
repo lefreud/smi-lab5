@@ -43,8 +43,8 @@ void consume_byte(char received_byte) {
 				for(int i = 0; i < LCD_LINE_SIZE; i++){
 					lcd_write_blank_space();
 					allReceivedBytes[i] = ' ';
-					bytesToShow = 0;
 				}
+				bytesToShow = 0;
 			} else if(command == 0x43) {
 				allReceivedBytes[bytesToShow] = parameter;
 				bytesToShow = (bytesToShow + 1) % LCD_LINE_SIZE;

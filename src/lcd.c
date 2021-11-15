@@ -9,19 +9,14 @@
 
 static char* INSTRUCTION;
 
-char* charToBinary(char c){
-	char* binaryForm;
-	binaryForm = (char*)malloc(8);
-	int i;
-	for (i = 0; i < 8; ++i) {
+char* charToBinary(char c, char* binaryForm){
+	for (int i = 0; i < 8; ++i) {
 		if ((c & (1 << i)) == 0) {
 			binaryForm[7 - i] = '0';
 		} else {
 			binaryForm[7 - i] = '1';
 		}
 	}
-	binaryForm[i] = '\0';
-	return (char*)binaryForm;
 }
 
 void LCD_pre_Send_Command(){
@@ -126,8 +121,7 @@ void lcd_init(){
 }
 
 void lcd_write_first_row(){
-	char* firstRow;
-	firstRow = (char*)malloc(6);
+	char firstRow[7];
 	firstRow[0] = 'F';
 	firstRow[1] = 'F';
 	firstRow[2] = 'C';
@@ -136,7 +130,6 @@ void lcd_write_first_row(){
 	firstRow[5] = '_';
 	firstRow[6] = '\0';
 	lcd_write_characters(firstRow);
-	free(firstRow);
 }
 
 void goToSecondLine(){
@@ -156,12 +149,12 @@ void goToFirstLine(){
 }
 
 void lcd_write_characters(char* characters){
+	char binaryForm[8];
 	for (int i = 0; i < strlen(characters); i++) {
-		char* binaryForm = charToBinary(characters[i]);
+		charToBinary(characters[i], binaryForm);
 		LCD_pre_Write_Command();
 		LCD_write_Instruction(binaryForm);
 		LCD_post_Send();
-		free(binaryForm);
 	}
 }
 
@@ -176,11 +169,9 @@ void lcd_write_time(int currentTime){
 		m /= 10;
 	}
 	// Declare char array for result
-	char* arr;
+	char arr[digit];
 	// Declare duplicate char array
 	char arr1[digit];
-	// Memory allocation of array
-	arr = (char*)malloc(digit);
 	// Separating integer into digits and
 	// accommodate it to character array
 	int index = 0;
@@ -201,14 +192,13 @@ void lcd_write_time(int currentTime){
 	// Char array truncate by null
 	arr[i] = '\0';
 	lcd_write_characters((char*)arr);
-	free(arr);
 }
 
 void lcd_write_blank_space(){
-	char* binaryForm = charToBinary(' ');
+	char binaryForm[8];
+	charToBinary(' ', binaryForm);
 	LCD_pre_Write_Command();
 	LCD_write_Instruction(binaryForm);
 	LCD_post_Send();
-	free(binaryForm);
 }
 
