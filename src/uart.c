@@ -49,6 +49,7 @@ void uart_init_uart()
 
 	USART2->CR1 |=
 			BIT13 | // USART Enable
+			BIT10 | // Enable parity bit
 			BIT5 | // RXNE interrupt enable
 			BIT3 | // Transmitter enable TODO: avoid transmitting
 			BIT2 // Receiver enable

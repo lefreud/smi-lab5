@@ -2625,7 +2625,7 @@ void uart_init_uart()
  800154a:	4b10      	ldr	r3, [pc, #64]	; (800158c <uart_init_uart+0x94>)
  800154c:	899b      	ldrh	r3, [r3, #12]
  800154e:	b29b      	uxth	r3, r3
- 8001550:	f443 5300 	orr.w	r3, r3, #8192	; 0x2000
+ 8001550:	f443 5310 	orr.w	r3, r3, #9216	; 0x2400
  8001554:	f043 032c 	orr.w	r3, r3, #44	; 0x2c
  8001558:	b29b      	uxth	r3, r3
  800155a:	8193      	strh	r3, [r2, #12]
