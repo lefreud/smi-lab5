@@ -1,6 +1,8 @@
 #include <uart.h>
 #include "stm32f4xx.h"
 #include "macro_utiles.h"
+#include "global_config.h"
+#include "partie2.h"
 
 #define CIRCULAR_BUFFER_SIZE 20
 
@@ -27,6 +29,10 @@ void USART2_IRQHandler()
 		circular_buffer[head] = USART2->DR;
 		head = (head + 1) % CIRCULAR_BUFFER_SIZE;
 	}
+
+#ifdef PARTIE_2
+    partie2_dispatch_uart_event();
+#endif
 }
 
 /*

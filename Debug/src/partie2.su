@@ -1,0 +1,4 @@
+partie2.c:10:6:partie2_init	4	static
+partie2.c:19:13:partie2_dispatch_uart_event	4	static
+partie2.c:23:13:partie2_dispatch_timer_event	4	static
+partie2.c:27:13:partie2_dispatch_main_event	4	static

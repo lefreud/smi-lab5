@@ -1,2 +1,3 @@
-timer.c:9:6:timer2_init	16	static
-timer.c:18:6:TIM2_IRQHandler	4	static
+timer.c:12:6:timer2_init	16	static
+timer.c:21:6:BoucleDAttente	32	static
+timer.c:27:6:TIM2_IRQHandler	4	static

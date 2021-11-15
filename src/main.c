@@ -38,6 +38,9 @@ SOFTWARE.
 #include "timer.h"
 #include "led.h"
 #include "commandParser.h"
+#include "global_config.h"
+#include "partie2.h"
+#include "system_stm32f4xx.h"
 
 static volatile uint32_t lastTimeRead = -1;
 static volatile uint32_t lastTransmissionNumber = 0;
@@ -51,24 +54,13 @@ int main(void)
     goToSecondLine();
     configureLEDs();
     timer2_init();
-    /*
-	receivedBytes[0] = 'C';
-	receivedBytes[1] = '0';
-	receivedBytes[2] = 0x8d;*/
+
+#ifdef PARTIE_2
+    partie2_init();
+#endif
     char latest_byte;
 
 	while (1) {
-		/*for (volatile int i = 0; i < 100000; i++);
-		while (!(USART2->SR & BIT7));
-		USART2->DR = 0xAA;*/
-		/* // USART2->CR1 |= BIT13; // USART Enable
-		volatile int a = USART2->SR;
-		while (!(USART2->SR & BIT7));
-		a = USART2->SR;
-		USART2->DR = 0xAA;
-		volatile int b = USART2->DR;
-		// USART2->CR1 &= ~BIT13; // USART Disable*/
-
 		if (uart_get_received_byte(&latest_byte)) {
 			consume_byte(latest_byte);
 		}
@@ -77,5 +69,8 @@ int main(void)
 			lastTimeRead = second;
 			lcd_write_time(lastTimeRead);
 		}
+#ifdef PARTIE_2
+		partie2_dispatch_main_event();
+#endif
 	}
 }

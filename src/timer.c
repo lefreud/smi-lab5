@@ -1,8 +1,11 @@
 #include "timer.h"
 #include "macro_utiles.h"
 #include "stm32f4xx.h"
+#include "global_config.h"
+#include "partie2.h"
+#include "system_stm32f4xx.h"
 
-static volatile uint32_t tim2CycleCounter = 0;
+volatile uint32_t tim2CycleCounter = 0;
 
 second = 0;
 
@@ -15,6 +18,12 @@ void timer2_init(){
 	TIM2->CR1 |= BIT0; //TIM2 counter enable
 }
 
+void BoucleDAttente(short Nombre_microseconde_Dattente)
+{
+	int N = (int) Nombre_microseconde_Dattente * (SystemCoreClock / (1000000 * 12.5));
+	for (volatile int i = 0; i < N; i++);
+}
+
 void TIM2_IRQHandler(){
 	TIM2->SR &= ~BIT0;
 	if (tim2CycleCounter == 0) {
@@ -24,4 +33,9 @@ void TIM2_IRQHandler(){
 		second = 0;
 	}
 	tim2CycleCounter = (tim2CycleCounter + 1) % 1000;
+
+#ifdef PARTIE_2
+    partie2_dispatch_timer_event();
+    BoucleDAttente(PARTIE_2_DELAI_US);
+#endif
 }
